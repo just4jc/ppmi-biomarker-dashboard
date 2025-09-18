@@ -124,6 +124,69 @@ def create_biomarker_boxplot(data, biomarker, cohorts=None):
     
     return fig
 
+def create_biomarker_violinplot(data, biomarker, cohorts=None):
+    """Create violin plot for biomarker levels by diagnosis"""
+    if cohorts is None:
+        cohorts = ['HC', 'PD', 'Prodromal PD']
+    
+    plot_data = data[
+        (data['TESTNAME'] == biomarker) & 
+        (data['COHORT_SIMPLE'].isin(cohorts)) &
+        (data['TESTVALUE_NUMERIC'].notna())
+    ]
+    
+    if len(plot_data) == 0:
+        st.warning(f"No data available for {biomarker}")
+        return None
+    
+    fig = px.violin(
+        plot_data,
+        x='COHORT_SIMPLE',
+        y='TESTVALUE_NUMERIC',
+        color='COHORT_SIMPLE',
+        box=True,  # Show box plot inside violin
+        title=f'{biomarker} Levels by Diagnosis (Violin Plot)',
+        labels={
+            'COHORT_SIMPLE': 'Diagnosis',
+            'TESTVALUE_NUMERIC': f'{biomarker} Level'
+        },
+        color_discrete_map={
+            'HC': '#2E8B57',
+            'PD': '#DC143C', 
+            'Prodromal PD': '#FF8C00',
+            'SWEDD': '#9370DB'
+        }
+    )
+    
+    fig.update_layout(
+        height=500,
+        showlegend=True,
+        title_x=0.5
+    )
+    
+    # Add statistical annotations
+    cohort_data = {}
+    for cohort in cohorts:
+        cohort_values = plot_data[plot_data['COHORT_SIMPLE'] == cohort]['TESTVALUE_NUMERIC'].dropna()
+        if len(cohort_values) > 0:
+            cohort_data[cohort] = cohort_values
+    
+    # Perform statistical tests between groups
+    if len(cohort_data) >= 2:
+        cohort_names = list(cohort_data.keys())
+        for i in range(len(cohort_names)):
+            for j in range(i+1, len(cohort_names)):
+                if cohort_names[i] in cohort_data and cohort_names[j] in cohort_data:
+                    stat, p_value = stats.mannwhitneyu(
+                        cohort_data[cohort_names[i]], 
+                        cohort_data[cohort_names[j]], 
+                        alternative='two-sided'
+                    )
+                    significance = "***" if p_value < 0.001 else "**" if p_value < 0.01 else "*" if p_value < 0.05 else "ns"
+                    st.write(f"{cohort_names[i]} vs {cohort_names[j]}: p={p_value:.4f} {significance}")
+    
+    return fig
+
 def create_longitudinal_plot(data, biomarker, cohorts=None):
     """Create longitudinal plot showing biomarker changes over time"""
     if cohorts is None:
@@ -451,9 +514,8 @@ def main():
             if selected_biomarker:
                 if plot_type == "Box Plot":
                     fig = create_biomarker_boxplot(filtered_data, selected_biomarker, cohorts)
-                else:
-                    fig = create_biomarker_boxplot(filtered_data, selected_biomarker, cohorts)
-                    # Convert to violin plot (simplified - could enhance this)
+                else:  # Violin Plot
+                    fig = create_biomarker_violinplot(filtered_data, selected_biomarker, cohorts)
                 
                 if fig:
                     st.plotly_chart(fig, use_container_width=True)
