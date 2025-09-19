@@ -100,4 +100,11 @@ if __name__ == "__main__":
     print(f"Total patients in biomarker data: {bio_current['PATNO'].nunique()}")
     print(f"Total patients in demographics: {demographics['PATNO'].nunique()}")
     print(f"Total patients in genetic data: {genetic_data['PATNO'].nunique()}")
-    print(f"Date range in biomarker data: {bio_current['RUNDATE'].min()} to {bio_current['RUNDATE'].max()}")
+    
+    # Fix RUNDATE column - filter out non-string values before finding min/max
+    rundate_series = bio_current['RUNDATE'].dropna()
+    rundate_strings = rundate_series[rundate_series.astype(str).str.match(r'\d{4}-\d{2}-\d{2}')]
+    if len(rundate_strings) > 0:
+        print(f"Date range in biomarker data: {rundate_strings.min()} to {rundate_strings.max()}")
+    else:
+        print("No valid dates found in RUNDATE column")
