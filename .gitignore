@@ -16,7 +16,7 @@ Interactive Data Visualization Dashboard.pdf
 # Allow CSV files (override the above exclusions) but exclude very large ones for now
 !**/*.csv
 
-# Temporarily exclude very large CSV files (>50MB) until Git LFS is configured
+# Exclude uncompressed version of large CSV (use compressed .gz version instead)
 Biospecimen Analysis Results*/Current_Biospecimen_Analysis_Results_18Sep2025.csv
 
 # Python
