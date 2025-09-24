@@ -7,6 +7,7 @@ Handles loading, cleaning, and merging of biomarker, clinical, and genetic data
 import pandas as pd
 import numpy as np
 import os
+import gzip
 from datetime import datetime
 import warnings
 warnings.filterwarnings('ignore')
@@ -33,11 +34,21 @@ class PPMIDataLoader:
         
         bio_path = os.path.join(self.base_path, "Biospecimen Analysis Results (The Biomarkers We're Focusing On)")
         
-        # Load current biospecimen data
-        self.biomarker_data = pd.read_csv(
-            os.path.join(bio_path, "Current_Biospecimen_Analysis_Results_18Sep2025.csv"),
-            low_memory=False
-        )
+        # Load current biospecimen data (try compressed version first, then uncompressed)
+        csv_file = os.path.join(bio_path, "Current_Biospecimen_Analysis_Results_18Sep2025.csv")
+        csv_gz_file = os.path.join(bio_path, "Current_Biospecimen_Analysis_Results_18Sep2025.csv.gz")
+        
+        if os.path.exists(csv_gz_file):
+            # Load compressed version
+            print("Loading compressed biospecimen data...")
+            with gzip.open(csv_gz_file, 'rt') as f:
+                self.biomarker_data = pd.read_csv(f, low_memory=False)
+        elif os.path.exists(csv_file):
+            # Load uncompressed version
+            print("Loading uncompressed biospecimen data...")
+            self.biomarker_data = pd.read_csv(csv_file, low_memory=False)
+        else:
+            raise FileNotFoundError(f"Neither compressed ({csv_gz_file}) nor uncompressed ({csv_file}) biospecimen data found")
         
         # Filter for key biomarkers and focus projects
         biomarker_keywords = ['synuclein', 'tau', 'p-tau', 'ptau', 'alpha', 'aSyn', 'amyloid', 'abeta']
