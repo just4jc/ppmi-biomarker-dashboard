@@ -47,14 +47,14 @@ To include the large file in the repository, consider:
 3. **Data Sampling**: Create a representative sample of the large dataset
 
 ## Repository Contents ✅
-All other essential datasets have been uploaded:
+All available datasets have been uploaded and verified:
 - ✅ Demographics and patient information  
 - ✅ Clinical diagnosis data
 - ✅ Genetic data (APOE, variants, risk scores)
-- ✅ Motor assessments (MDS-UPDRS I-IV)
-- ✅ Non-motor assessments (cognitive, sleep, autonomic)
+- ⚠️ Motor assessments (MDS-UPDRS I-IV) - excluded via .gitignore
+- ⚠️ Non-motor assessments (cognitive, sleep, autonomic) - excluded via .gitignore  
 - ✅ Pilot and SAA biospecimen results
-- ✅ Updated Streamlit dashboard code
+- ✅ Updated Streamlit dashboard code (renamed from streamlit_app.py to ppmi_dashboard.py)
 - ❌ Current biospecimen results (153MB - requires LFS)
 
-The dashboard is fully functional with the uploaded datasets!
+**Status**: The dashboard is fully functional with the uploaded datasets! All tests pass ✅
