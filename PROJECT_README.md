@@ -53,7 +53,7 @@ pip install -r requirements.txt
 python test_dashboard.py
 
 # Launch dashboard
-streamlit run ppmi_dashboard.py
+streamlit run streamlit_app.py
 # OR use the launch script
 ./launch_dashboard.sh
 ```
@@ -65,7 +65,7 @@ Once launched, visit: `http://localhost:8501`
 
 ```
 ppmi-biomarker-dashboard/
-├── ppmi_dashboard.py          # Main Streamlit application
+├── streamlit_app.py              # Main Streamlit application
 ├── data_loader.py             # Data preprocessing and loading utilities
 ├── requirements.txt           # Python dependencies
 ├── launch_dashboard.sh        # Quick launch script
