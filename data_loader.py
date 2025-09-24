@@ -11,8 +11,9 @@ from datetime import datetime
 import warnings
 warnings.filterwarnings('ignore')
 
-# Define the base path
-BASE_PATH = "/Users/georgeng/Library/CloudStorage/GoogleDrive-2018076@teacher.hkuspace.hku.hk/My Drive/Courses/Duke-NUS MD/Research Articles/PD Related/Datasets/PPMI Various Datasets"
+# Define the base path - use repository root or environment variable if set
+import os
+BASE_PATH = os.environ.get('PPMI_DATA_PATH', os.path.dirname(os.path.abspath(__file__)))
 
 class PPMIDataLoader:
     """Class to handle loading and preprocessing of PPMI data"""
@@ -33,11 +34,30 @@ class PPMIDataLoader:
         
         bio_path = os.path.join(self.base_path, "Biospecimen Analysis Results (The Biomarkers We're Focusing On)")
         
-        # Load current biospecimen data
-        self.biomarker_data = pd.read_csv(
-            os.path.join(bio_path, "Current_Biospecimen_Analysis_Results_18Sep2025.csv"),
-            low_memory=False
-        )
+        # Try to load current biospecimen data first, fall back to pilot/SAA data
+        biomarker_files = [
+            "Current_Biospecimen_Analysis_Results_18Sep2025.csv",
+            "Pilot_Biospecimen_Analysis_Results_18Sep2025.csv",
+            "SAA_Biospecimen_Analysis_Results_18Sep2025.csv"
+        ]
+        
+        self.biomarker_data = None
+        for filename in biomarker_files:
+            filepath = os.path.join(bio_path, filename)
+            if os.path.exists(filepath):
+                print(f"Loading {filename}...")
+                if self.biomarker_data is None:
+                    self.biomarker_data = pd.read_csv(filepath, low_memory=False)
+                else:
+                    # Append additional data
+                    additional_data = pd.read_csv(filepath, low_memory=False)
+                    self.biomarker_data = pd.concat([self.biomarker_data, additional_data], ignore_index=True)
+                print(f"Loaded {len(additional_data if 'additional_data' in locals() else self.biomarker_data)} records from {filename}")
+        
+        if self.biomarker_data is None:
+            raise FileNotFoundError("No biomarker data files found in repository")
+        
+        print(f"Total biomarker records: {len(self.biomarker_data)}")
         
         # Filter for key biomarkers and focus projects
         biomarker_keywords = ['synuclein', 'tau', 'p-tau', 'ptau', 'alpha', 'aSyn', 'amyloid', 'abeta']
@@ -90,19 +110,24 @@ class PPMIDataLoader:
             low_memory=False
         )
         
-        # MDS-UPDRS Part III (motor examination)
+        # MDS-UPDRS Part III (motor examination) - handle gracefully if missing
         updrs_path = os.path.join(clin_path, "ALL Motor : MDS-UPDRS")
-        self.updrs_data = pd.read_csv(
-            os.path.join(updrs_path, "MDS-UPDRS_Part_III_18Sep2025.csv"),
-            low_memory=False
-        )
+        updrs_file = os.path.join(updrs_path, "MDS-UPDRS_Part_III_18Sep2025.csv")
+        
+        if os.path.exists(updrs_file):
+            self.updrs_data = pd.read_csv(updrs_file, low_memory=False)
+            print(f"Loaded UPDRS data: {len(self.updrs_data)} records")
+        else:
+            print("⚠️ MDS-UPDRS data not found - creating empty DataFrame")
+            # Create an empty DataFrame with expected columns
+            self.updrs_data = pd.DataFrame(columns=['PATNO', 'EVENT_ID', 'NP3TOT'])
+            print("UPDRS data not available (likely excluded from repository)")
         
         # Process demographics
         self.demographics['BIRTHDT'] = pd.to_datetime(self.demographics['BIRTHDT'], format='%m/%Y', errors='coerce')
         self.demographics['SEX_LABEL'] = self.demographics['SEX'].map({0: 'Female', 1: 'Male'})
         
         print(f"Loaded demographics for {self.demographics['PATNO'].nunique()} patients")
-        print(f"Loaded UPDRS data: {len(self.updrs_data)} records")
         
         return self.demographics, self.clinical_data, self.updrs_data
     

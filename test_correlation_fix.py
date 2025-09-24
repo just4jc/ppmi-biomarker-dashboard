@@ -5,7 +5,9 @@ Test script to verify the correlation heatmap fix
 
 import sys
 import os
-sys.path.append('/Users/georgeng/Library/CloudStorage/GoogleDrive-2018076@teacher.hkuspace.hku.hk/My Drive/Courses/Duke-NUS MD/Research Articles/PD Related/Datasets/PPMI Various Datasets')
+
+# Use repository base path or environment variable
+sys.path.append(os.environ.get('PPMI_DATA_PATH', os.path.dirname(os.path.abspath(__file__))))
 
 from data_loader import PPMIDataLoader
 import pandas as pd
