@@ -224,7 +224,7 @@ def main():
     
     if passed == total:
         print("\n🎉 All tests passed! You can launch the dashboard with:")
-        print("   streamlit run ppmi_dashboard.py")
+        print("   streamlit run streamlit_app.py")
     else:
         print(f"\n⚠️  {total - passed} test(s) failed. Please fix issues before launching dashboard.")
         print("\nCommon solutions:")
