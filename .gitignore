@@ -1,13 +1,23 @@
 # PPMI Biomarker Dashboard - .gitignore
 
-# Data files - DO NOT COMMIT (contains sensitive patient data)
+# Data files - Allow CSV files but exclude other sensitive data
 Biospecimen Analysis Methods*/
-Biospecimen Analysis Results*/
-Clinical & Motor Assessments*/
-Core Patient & Visit Information*/
-Genetic Data*/
-Start Here/
+Biospecimen Analysis Results*/*.pdf
+Clinical & Motor Assessments*/*.zip
+Clinical & Motor Assessments*/Archive.zip
+Clinical & Motor Assessments*/ALL Motor*
+Clinical & Motor Assessments*/Medication Status/
+Clinical & Motor Assessments*/Non-motor Assessments*
+Start Here/*.xlsx
+Start Here/*.pdf
+Start Here/Study Docs/
 Interactive Data Visualization Dashboard.pdf
+
+# Allow CSV files (override the above exclusions) but exclude very large ones for now
+!**/*.csv
+
+# Temporarily exclude very large CSV files (>50MB) until Git LFS is configured
+Biospecimen Analysis Results*/Current_Biospecimen_Analysis_Results_18Sep2025.csv
 
 # Python
 __pycache__/
