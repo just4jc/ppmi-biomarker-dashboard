@@ -40,7 +40,8 @@ class PPMIDataLoader:
         )
         
         # Filter for key biomarkers and focus projects
-        biomarker_keywords = ['synuclein', 'tau', 'p-tau', 'ptau', 'alpha', 'aSyn', 'amyloid', 'abeta']
+        pd_pros_proteins = ['NEFL', 'TIMP1', 'A2M', 'VCAM1', 'GFAP', 'IL6R', 'ENRAGE', 'VEGFA', 'DCN', 'MMP2', 'GP130', 'FGF21', 'UCHL1', 'ICAM1']
+        biomarker_keywords = ['synuclein', 'tau', 'p-tau', 'ptau', 'alpha', 'aSyn', 'amyloid', 'abeta'] + pd_pros_proteins
         focus_projects = [124, 125, 159, 172, 173, 207]
         
         # Focus on key biomarkers OR focus projects
