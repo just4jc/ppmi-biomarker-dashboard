@@ -14,6 +14,37 @@ warnings.filterwarnings('ignore')
 # Define the base path
 # BASE_PATH = "/Users/georgeng/Library/CloudStorage/GoogleDrive-2018076@teacher.hkuspace.hku.hk/My Drive/Courses/Duke-NUS MD/Research Articles/PD Related/Datasets/PPMI Various Datasets"
 
+# Define URLs for data files hosted on GitHub
+BASE_URL = "https://raw.githubusercontent.com/just4jc/ppmi-biomarker-dashboard/main"
+
+DATA_URLS = {
+    "biomarker": f"{BASE_URL}/biospecimen_analysis_results/Current_Biospecimen_Analysis_Results_18Sep2025.csv",
+    "demographics": f"{BASE_URL}/core_patient_visit_info/Demographics_18Sep2025.csv",
+    "age": f"{BASE_URL}/core_patient_visit_info/Age_at_visit_18Sep2025.csv",
+    "clinical_dx": f"{BASE_URL}/clinical_motor_assessments/medical_history/Clinical_Diagnosis_18Sep2025.csv",
+    "updrs": f"{BASE_URL}/clinical_motor_assessments/all_motor_mds_updrs/MDS-UPDRS_Part_III_18Sep2025.csv",
+    "genetic": f"{BASE_URL}/genetic_data/Genetic Data - Consensus APOE Genotype and Pathogenic Variants for LRRK2, GBA, VPS35, SNCA, PRKN, PARK7, and PINK1.csv"
+}
+
+def _read_data(local_path, url):
+    """Try to read from local path, fall back to URL."""
+    try:
+        # Prefer local file if it exists
+        if os.path.exists(local_path):
+            print(f"Reading data from local file: {local_path}")
+            return pd.read_csv(local_path, low_memory=False)
+        else:
+            # Fallback to URL
+            print(f"Local file not found. Reading data from URL: {url}")
+            return pd.read_csv(url, low_memory=False)
+    except Exception as e:
+        print(f"Error reading data for {os.path.basename(local_path)}: {e}")
+        # Raise a more informative error for deployment
+        raise FileNotFoundError(
+            f"Could not load data from local path ({local_path}) or URL ({url}). "
+            "Ensure data files are in the correct local directory or accessible via the URL."
+        ) from e
+
 class PPMIDataLoader:
     """Class to handle loading and preprocessing of PPMI data"""
     
@@ -31,13 +62,8 @@ class PPMIDataLoader:
         """Load and preprocess biomarker analysis results"""
         print("Loading biomarker data...")
         
-        bio_path = os.path.join(self.base_path, "biospecimen_analysis_results")
-        
-        # Load current biospecimen data
-        self.biomarker_data = pd.read_csv(
-            os.path.join(bio_path, "Current_Biospecimen_Analysis_Results_18Sep2025.csv"),
-            low_memory=False
-        )
+        local_path = os.path.join(self.base_path, "biospecimen_analysis_results", "Current_Biospecimen_Analysis_Results_18Sep2025.csv")
+        self.biomarker_data = _read_data(local_path, DATA_URLS["biomarker"])
         
         # Filter for key biomarkers and focus projects
         pd_pros_proteins = ['NEFL', 'TIMP1', 'A2M', 'VCAM1', 'GFAP', 'IL6R', 'ENRAGE', 'VEGFA', 'DCN', 'MMP2', 'GP130', 'FGF21', 'UCHL1', 'ICAM1']
@@ -75,28 +101,20 @@ class PPMIDataLoader:
         print("Loading clinical and demographic data...")
         
         # Demographics
-        demo_path = os.path.join(self.base_path, "core_patient_visit_info")
-        self.demographics = pd.read_csv(
-            os.path.join(demo_path, "Demographics_18Sep2025.csv"),
-            low_memory=False
-        )
+        local_demo_path = os.path.join(self.base_path, "core_patient_visit_info", "Demographics_18Sep2025.csv")
+        self.demographics = _read_data(local_demo_path, DATA_URLS["demographics"])
         
         # Age at visit
-        self.age_data = pd.read_csv(os.path.join(demo_path, "Age_at_visit_18Sep2025.csv"))
+        local_age_path = os.path.join(self.base_path, "core_patient_visit_info", "Age_at_visit_18Sep2025.csv")
+        self.age_data = _read_data(local_age_path, DATA_URLS["age"])
         
         # Clinical diagnosis
-        clin_path = os.path.join(self.base_path, "clinical_motor_assessments")
-        self.clinical_data = pd.read_csv(
-            os.path.join(clin_path, "medical_history/Clinical_Diagnosis_18Sep2025.csv"),
-            low_memory=False
-        )
+        local_clin_path = os.path.join(self.base_path, "clinical_motor_assessments", "medical_history", "Clinical_Diagnosis_18Sep2025.csv")
+        self.clinical_data = _read_data(local_clin_path, DATA_URLS["clinical_dx"])
         
         # MDS-UPDRS Part III (motor examination)
-        updrs_path = os.path.join(clin_path, "all_motor_mds_updrs")
-        self.updrs_data = pd.read_csv(
-            os.path.join(updrs_path, "MDS-UPDRS_Part_III_18Sep2025.csv"),
-            low_memory=False
-        )
+        local_updrs_path = os.path.join(self.base_path, "clinical_motor_assessments", "all_motor_mds_updrs", "MDS-UPDRS_Part_III_18Sep2025.csv")
+        self.updrs_data = _read_data(local_updrs_path, DATA_URLS["updrs"])
         
         # Process demographics
         self.demographics['BIRTHDT'] = pd.to_datetime(self.demographics['BIRTHDT'], format='%m/%Y', errors='coerce')
@@ -111,10 +129,8 @@ class PPMIDataLoader:
         """Load genetic data"""
         print("Loading genetic data...")
         
-        gen_path = os.path.join(self.base_path, "genetic_data")
-        self.genetic_data = pd.read_csv(
-            os.path.join(gen_path, "Genetic Data - Consensus APOE Genotype and Pathogenic Variants for LRRK2, GBA, VPS35, SNCA, PRKN, PARK7, and PINK1.csv")
-        )
+        local_path = os.path.join(self.base_path, "genetic_data", "Genetic Data - Consensus APOE Genotype and Pathogenic Variants for LRRK2, GBA, VPS35, SNCA, PRKN, PARK7, and PINK1.csv")
+        self.genetic_data = _read_data(local_path, DATA_URLS["genetic"])
         
         # Create risk groups based on pathogenic variants
         self.genetic_data['RISK_GROUP'] = self.genetic_data['PATHVAR_COUNT'].apply(
