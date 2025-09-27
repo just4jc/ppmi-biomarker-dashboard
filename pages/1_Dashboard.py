@@ -18,14 +18,6 @@ from data_loader import PPMIDataLoader
 import numpy as np
 from scipy.stats import mannwhitneyu, pearsonr
 
-# --- Page Configuration ---
-st.set_page_config(
-    page_title="PPMI Biomarker Dashboard",
-    page_icon="🧠",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
-
 # --- Custom CSS ---
 st.markdown("""
 <style>
