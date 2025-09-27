@@ -14,16 +14,16 @@ warnings.filterwarnings('ignore')
 # Define the base path
 # BASE_PATH = "/Users/georgeng/Library/CloudStorage/GoogleDrive-2018076@teacher.hkuspace.hku.hk/My Drive/Courses/Duke-NUS MD/Research Articles/PD Related/Datasets/PPMI Various Datasets"
 
-# Define URLs for data files hosted on GitHub
-BASE_URL = "https://raw.githubusercontent.com/just4jc/ppmi-biomarker-dashboard/main"
+# Define URLs for data files hosted on GitHub Releases
+BASE_URL = "https://github.com/just4jc/ppmi-biomarker-dashboard/releases/download/v1.0.0"
 
 DATA_URLS = {
-    "biomarker": f"{BASE_URL}/biospecimen_analysis_results/Current_Biospecimen_Analysis_Results_18Sep2025.csv",
-    "demographics": f"{BASE_URL}/core_patient_visit_info/Demographics_18Sep2025.csv",
-    "age": f"{BASE_URL}/core_patient_visit_info/Age_at_visit_18Sep2025.csv",
-    "clinical_dx": f"{BASE_URL}/clinical_motor_assessments/medical_history/Clinical_Diagnosis_18Sep2025.csv",
-    "updrs": f"{BASE_URL}/clinical_motor_assessments/all_motor_mds_updrs/MDS-UPDRS_Part_III_18Sep2025.csv",
-    "genetic": f"{BASE_URL}/genetic_data/Genetic Data - Consensus APOE Genotype and Pathogenic Variants for LRRK2, GBA, VPS35, SNCA, PRKN, PARK7, and PINK1.csv"
+    "biomarker": f"{BASE_URL}/Current_Biospecimen_Analysis_Results_18Sep2025.csv",
+    "demographics": f"{BASE_URL}/Demographics_18Sep2025.csv",
+    "age": f"{BASE_URL}/Age_at_visit_18Sep2025.csv",
+    "clinical_dx": f"{BASE_URL}/Clinical_Diagnosis_18Sep2025.csv",
+    "updrs": f"{BASE_URL}/MDS-UPDRS_Part_III_18Sep2025.csv",
+    "genetic": f"{BASE_URL}/Genetic%20Data%20-%20Consensus%20APOE%20Genotype%20and%20Pathogenic%20Variants%20for%20LRRK2,%20GBA,%20VPS35,%20SNCA,%20PRKN,%20PARK7,%20and%20PINK1.csv"
 }
 
 def _read_data(local_path, url):
