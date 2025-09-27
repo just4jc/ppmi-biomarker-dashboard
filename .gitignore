@@ -1,104 +1,27 @@
 # PPMI Biomarker Dashboard - .gitignore
 
-# Data files - DO NOT COMMIT (contains sensitive patient data)
-Biospecimen Analysis Methods*/
-Biospecimen Analysis Results*/
-Clinical & Motor Assessments*/
-Core Patient & Visit Information*/
-Genetic Data*/
-Start Here/
-Interactive Data Visualization Dashboard.pdf
-
 # Python
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
+*.pyc
+*.pyo
+*.pyd
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Virtual environments
-.env
-.venv
 env/
 venv/
-ENV/
-env.bak/
-venv.bak/
 
-# IDEs
+# Data files
+*.csv
+*.xlsx
+*.zip
+*.pdf
+*.gz
+
+# IDE / Editor
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# Streamlit
-.streamlit/
-
-# macOS
+# OS-specific
 .DS_Store
-.AppleDouble
-.LSOverride
-
-# Windows
 Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# Linux
-*~
-
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-*.temp
-
-# Cache
-*.cache
-.cache/
-
-# Data analysis temp files
-*.pkl
-*.pickle
-*.h5
-*.hdf5
-
-# Output files
-*.png
-*.jpg
-*.svg
-*.pdf
-plots/
-figures/
-output/
-
-# Backup files
-*.bak
-*.backup
-*.orig

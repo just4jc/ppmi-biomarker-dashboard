@@ -218,6 +218,90 @@ class PPMIDataLoader:
         
         return key_data
 
+    def calculate_pd_pros(self, data_to_process):
+        """
+        Replicates the PD-ProS score calculation from Tsukita et al., Nature Aging 2022.
+        This function uses the 14-protein panel and their published coefficients.
+        """
+        print("Calculating PD Proteomic Score (PD-ProS) using 14-protein panel...")
+
+        if data_to_process is None or data_to_process.empty:
+            print("Warning: Input data is empty. Cannot calculate PD-ProS.")
+            return data_to_process
+        
+        data = data_to_process.copy()
+        
+        # 14 proteins and their coefficients from the paper
+        pd_pros_panel = {
+            'NEFL': 0.13, 'GFAP': 0.11, 'UCHL1': 0.10, 'GP130': -0.09,
+            'MMP2': -0.08, 'TIMP1': -0.08, 'A2M': -0.07, 'IL6R': 0.07,
+            'ICAM1': 0.07, 'VCAM1': 0.06, 'DCN': -0.06, 'VEGFA': 0.05,
+            'FGF21': 0.05, 'ENRAGE': 0.05
+        }
+        required_proteins = list(pd_pros_panel.keys())
+        
+        if 'TESTNAME' not in data.columns or 'TESTVALUE' not in data.columns:
+            print("Warning: 'TESTNAME' or 'TESTVALUE' not in data. Cannot calculate PD-ProS.")
+            data['PD_PROS'] = np.nan
+            return data
+
+        # Pivot data to have proteins as columns
+        try:
+            data['TESTVALUE'] = pd.to_numeric(data['TESTVALUE'], errors='coerce')
+            pivoted = data.pivot_table(
+                index=['PATNO', 'RUNDATE'], 
+                columns='TESTNAME', 
+                values='TESTVALUE'
+            )
+            print(f"Pivoted data for PD-ProS calculation. Shape: {pivoted.shape}")
+        except Exception as e:
+            print(f"Error pivoting data for PD-ProS: {e}")
+            data['PD_PROS'] = np.nan
+            return data
+
+        available_proteins = [p for p in required_proteins if p in pivoted.columns]
+        missing_proteins = set(required_proteins) - set(available_proteins)
+        if missing_proteins:
+            print(f"Warning: The following proteins required for PD-ProS are missing: {missing_proteins}")
+
+        if not available_proteins:
+            print("Warning: No required proteins found. Cannot calculate PD-ProS.")
+            data['PD_PROS'] = np.nan
+            return data
+
+        # Standardize (z-score) the available protein values
+        for protein in available_proteins:
+            mean = pivoted[protein].mean()
+            std = pivoted[protein].std()
+            if std > 0:
+                pivoted[f'{protein}_z'] = (pivoted[protein] - mean) / std
+            else:
+                pivoted[f'{protein}_z'] = 0 # If no variance, z-score is 0
+        
+        # Calculate the weighted sum for the PD-ProS score
+        pivoted['PD_PROS_CALCULATED'] = 0
+        for protein in available_proteins:
+            pivoted['PD_PROS_CALCULATED'] += pivoted[f'{protein}_z'] * pd_pros_panel[protein]
+        
+        # Merge the calculated score back into the original dataframe
+        pivoted_to_merge = pivoted[['PD_PROS_CALCULATED']].reset_index()
+        
+        # Ensure RUNDATE is in the same format for merging if it's not already
+        if 'RUNDATE' in data.columns and data['RUNDATE'].dtype != pivoted_to_merge['RUNDATE'].dtype:
+             data['RUNDATE'] = pd.to_datetime(data['RUNDATE'])
+             pivoted_to_merge['RUNDATE'] = pd.to_datetime(pivoted_to_merge['RUNDATE'])
+
+        data = data.merge(
+            pivoted_to_merge,
+            on=['PATNO', 'RUNDATE'],
+            how='left'
+        )
+        
+        data.rename(columns={'PD_PROS_CALCULATED': 'PD_PROS'}, inplace=True)
+        
+        print("PD-ProS calculation complete.")
+        return data
+
 def main():
     """Test the data loader"""
     loader = PPMIDataLoader()
