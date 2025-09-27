@@ -199,19 +199,22 @@ def main():
         
         # Pivot data for correlation
         if x_biomarker and y_biomarker:
-            pivot_x = filtered_data[filtered_data['TESTNAME'] == x_biomarker].groupby('PATNO')['TESTVALUE_NUMERIC'].mean().rename(x_biomarker)
-            pivot_y = filtered_data[filtered_data['TESTNAME'] == y_biomarker].groupby('PATNO')['TESTVALUE_NUMERIC'].mean().rename(y_biomarker)
-            corr_data = pd.concat([pivot_x, pivot_y], axis=1).dropna()
-            
-            # Add cohort info back
-            cohort_info = filtered_data[['PATNO', 'COHORT_SIMPLE']].drop_duplicates('PATNO').set_index('PATNO')
-            corr_data = corr_data.join(cohort_info)
-
-            fig = create_correlation_plot(corr_data, x_biomarker, y_biomarker)
-            if fig:
-                st.plotly_chart(fig, use_container_width=True)
+            if x_biomarker == y_biomarker:
+                st.warning("Please select different biomarkers for the X and Y axes.")
             else:
-                st.warning("Not enough data to plot correlation.")
+                pivot_x = filtered_data[filtered_data['TESTNAME'] == x_biomarker].groupby('PATNO')['TESTVALUE_NUMERIC'].mean().rename(x_biomarker)
+                pivot_y = filtered_data[filtered_data['TESTNAME'] == y_biomarker].groupby('PATNO')['TESTVALUE_NUMERIC'].mean().rename(y_biomarker)
+                corr_data = pd.concat([pivot_x, pivot_y], axis=1).dropna()
+                
+                # Add cohort info back
+                cohort_info = filtered_data[['PATNO', 'COHORT_SIMPLE']].drop_duplicates('PATNO').set_index('PATNO')
+                corr_data = corr_data.join(cohort_info)
+
+                fig = create_correlation_plot(corr_data, x_biomarker, y_biomarker)
+                if fig:
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.warning("Not enough data to plot correlation.")
 
     # --- Tab 4: Neuropsychiatric & Motor Scores ---
     with tab4:
