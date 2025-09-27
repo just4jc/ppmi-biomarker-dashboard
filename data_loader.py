@@ -23,7 +23,7 @@ DATA_URLS = {
     "age": f"{BASE_URL}/Age_at_visit_18Sep2025.csv",
     "clinical_dx": f"{BASE_URL}/Clinical_Diagnosis_18Sep2025.csv",
     "updrs": f"{BASE_URL}/MDS-UPDRS_Part_III_18Sep2025.csv",
-    "genetic": f"{BASE_URL}/Genetic%20Data%20-%20Consensus%20APOE%20Genotype%20and%20Pathogenic%20Variants%20for%20LRRK2,%20GBA,%20VPS35,%20SNCA,%20PRKN,%20PARK7,%20and%20PINK1.csv"
+    "genetic": f"{BASE_URL}/genetic_variants.csv"
 }
 
 def _read_data(local_path, url):
@@ -129,7 +129,7 @@ class PPMIDataLoader:
         """Load genetic data"""
         print("Loading genetic data...")
         
-        local_path = os.path.join(self.base_path, "genetic_data", "Genetic Data - Consensus APOE Genotype and Pathogenic Variants for LRRK2, GBA, VPS35, SNCA, PRKN, PARK7, and PINK1.csv")
+        local_path = os.path.join(self.base_path, "genetic_data", "genetic_variants.csv")
         self.genetic_data = _read_data(local_path, DATA_URLS["genetic"])
         
         # Create risk groups based on pathogenic variants
