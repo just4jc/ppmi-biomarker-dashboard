@@ -53,15 +53,15 @@ def test_data_files():
     """Test that required data files exist"""
     print("\nTesting data file availability...")
     
-    base_path = "/Users/georgeng/Library/CloudStorage/GoogleDrive-2018076@teacher.hkuspace.hku.hk/My Drive/Courses/Duke-NUS MD/Research Articles/PD Related/Datasets/PPMI Various Datasets"
+    base_path = "."
     
     required_files = [
-        "Biospecimen Analysis Results (The Biomarkers We're Focusing On)/Current_Biospecimen_Analysis_Results_18Sep2025.csv",
-        "Core Patient & Visit Information (Essential for Linking All Data)/Demographics_18Sep2025.csv",
-        "Core Patient & Visit Information (Essential for Linking All Data)/Age_at_visit_18Sep2025.csv",
-        "Clinical & Motor Assessments(To Correlate Biomarkers with Disease Status & Progression)/Medical History/Clinical_Diagnosis_18Sep2025.csv",
-        "Clinical & Motor Assessments(To Correlate Biomarkers with Disease Status & Progression)/ALL Motor : MDS-UPDRS/MDS-UPDRS_Part_III_18Sep2025.csv",
-        "Genetic Data (For Context and Stratification)/Genetic Data - Consensus APOE Genotype and Pathogenic Variants for LRRK2, GBA, VPS35, SNCA, PRKN, PARK7, and PINK1.csv"
+        "biospecimen_analysis_results/Current_Biospecimen_Analysis_Results_18Sep2025.csv",
+        "core_patient_visit_info/Demographics_18Sep2025.csv",
+        "core_patient_visit_info/Age_at_visit_18Sep2025.csv",
+        "clinical_motor_assessments/medical_history/Clinical_Diagnosis_18Sep2025.csv",
+        "clinical_motor_assessments/all_motor_mds_updrs/MDS-UPDRS_Part_III_18Sep2025.csv",
+        "genetic_data/Genetic Data - Consensus APOE Genotype and Pathogenic Variants for LRRK2, GBA, VPS35, SNCA, PRKN, PARK7, and PINK1.csv"
     ]
     
     all_exist = True

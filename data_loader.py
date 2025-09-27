@@ -12,13 +12,13 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Define the base path
-BASE_PATH = "/Users/georgeng/Library/CloudStorage/GoogleDrive-2018076@teacher.hkuspace.hku.hk/My Drive/Courses/Duke-NUS MD/Research Articles/PD Related/Datasets/PPMI Various Datasets"
+# BASE_PATH = "/Users/georgeng/Library/CloudStorage/GoogleDrive-2018076@teacher.hkuspace.hku.hk/My Drive/Courses/Duke-NUS MD/Research Articles/PD Related/Datasets/PPMI Various Datasets"
 
 class PPMIDataLoader:
     """Class to handle loading and preprocessing of PPMI data"""
     
-    def __init__(self):
-        self.base_path = BASE_PATH
+    def __init__(self, base_path='.'):
+        self.base_path = base_path
         self.biomarker_data = None
         self.demographics = None
         self.clinical_data = None
@@ -31,7 +31,7 @@ class PPMIDataLoader:
         """Load and preprocess biomarker analysis results"""
         print("Loading biomarker data...")
         
-        bio_path = os.path.join(self.base_path, "Biospecimen Analysis Results (The Biomarkers We're Focusing On)")
+        bio_path = os.path.join(self.base_path, "biospecimen_analysis_results")
         
         # Load current biospecimen data
         self.biomarker_data = pd.read_csv(
@@ -74,7 +74,7 @@ class PPMIDataLoader:
         print("Loading clinical and demographic data...")
         
         # Demographics
-        demo_path = os.path.join(self.base_path, "Core Patient & Visit Information (Essential for Linking All Data)")
+        demo_path = os.path.join(self.base_path, "core_patient_visit_info")
         self.demographics = pd.read_csv(
             os.path.join(demo_path, "Demographics_18Sep2025.csv"),
             low_memory=False
@@ -84,14 +84,14 @@ class PPMIDataLoader:
         self.age_data = pd.read_csv(os.path.join(demo_path, "Age_at_visit_18Sep2025.csv"))
         
         # Clinical diagnosis
-        clin_path = os.path.join(self.base_path, "Clinical & Motor Assessments(To Correlate Biomarkers with Disease Status & Progression)")
+        clin_path = os.path.join(self.base_path, "clinical_motor_assessments")
         self.clinical_data = pd.read_csv(
-            os.path.join(clin_path, "Medical History/Clinical_Diagnosis_18Sep2025.csv"),
+            os.path.join(clin_path, "medical_history/Clinical_Diagnosis_18Sep2025.csv"),
             low_memory=False
         )
         
         # MDS-UPDRS Part III (motor examination)
-        updrs_path = os.path.join(clin_path, "ALL Motor : MDS-UPDRS")
+        updrs_path = os.path.join(clin_path, "all_motor_mds_updrs")
         self.updrs_data = pd.read_csv(
             os.path.join(updrs_path, "MDS-UPDRS_Part_III_18Sep2025.csv"),
             low_memory=False
@@ -110,7 +110,7 @@ class PPMIDataLoader:
         """Load genetic data"""
         print("Loading genetic data...")
         
-        gen_path = os.path.join(self.base_path, "Genetic Data (For Context and Stratification)")
+        gen_path = os.path.join(self.base_path, "genetic_data")
         self.genetic_data = pd.read_csv(
             os.path.join(gen_path, "Genetic Data - Consensus APOE Genotype and Pathogenic Variants for LRRK2, GBA, VPS35, SNCA, PRKN, PARK7, and PINK1.csv")
         )

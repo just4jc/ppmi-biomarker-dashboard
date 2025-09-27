@@ -14,7 +14,7 @@ Features:
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from data_loader import DataLoader
+from data_loader import PPMIDataLoader
 import numpy as np
 from scipy.stats import mannwhitneyu, pearsonr
 
@@ -49,7 +49,7 @@ st.markdown("""
 def load_data():
     """Load, merge, and cache data to prevent reloading on every interaction."""
     print("--- Initializing Data Loading Process ---")
-    loader = DataLoader()
+    loader = PPMIDataLoader()
     merged_data = loader.create_merged_dataset()
     
     if merged_data is None or merged_data.empty:

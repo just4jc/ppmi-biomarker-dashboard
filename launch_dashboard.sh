@@ -73,7 +73,7 @@ echo "🔄 To stop the dashboard, press Ctrl+C"
 echo ""
 
 if [ -f "ppmi_dashboard.py" ]; then
-    streamlit run ppmi_dashboard.py
+    streamlit run streamlit_app.py
 else
     echo "❌ ppmi_dashboard.py not found in current directory"
     echo "Current directory contents:"
