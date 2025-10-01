@@ -50,7 +50,7 @@ def create_violin_plot(data, biomarker, cohorts):
     plot_data = data[data['TESTNAME'] == biomarker].dropna(subset=['TESTVALUE_NUMERIC', 'COHORT_SIMPLE'])
     if plot_data.empty: return None
     return px.violin(plot_data, x='COHORT_SIMPLE', y='TESTVALUE_NUMERIC', color='COHORT_SIMPLE',
-                   box=True,  # Show box plot inside violin
+                   box=True, points=False, # Show box plot inside violin
                    title=f'Distribution of {biomarker} by Diagnosis',
                    labels={'COHORT_SIMPLE': 'Cohort', 'TESTVALUE_NUMERIC': 'Biomarker Level'},
                    category_orders={'COHORT_SIMPLE': cohorts})
