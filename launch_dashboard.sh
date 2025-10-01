@@ -72,10 +72,10 @@ echo "📋 Dashboard will be available at: http://localhost:8501"
 echo "🔄 To stop the dashboard, press Ctrl+C"
 echo ""
 
-if [ -f "ppmi_dashboard.py" ]; then
+if [ -f "streamlit_app.py" ]; then
     streamlit run streamlit_app.py
 else
-    echo "❌ ppmi_dashboard.py not found in current directory"
+    echo "❌ streamlit_app.py not found in current directory"
     echo "Current directory contents:"
     ls -la
     exit 1

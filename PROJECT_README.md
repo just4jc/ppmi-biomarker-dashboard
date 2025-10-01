@@ -53,7 +53,7 @@ pip install -r requirements.txt
 python test_dashboard.py
 
 # Launch dashboard
-streamlit run ppmi_dashboard.py
+streamlit run streamlit_app.py
 # OR use the launch script
 ./launch_dashboard.sh
 ```
@@ -65,17 +65,17 @@ Once launched, visit: `http://localhost:8501`
 
 ```
 ppmi-biomarker-dashboard/
-├── ppmi_dashboard.py          # Main Streamlit application
-├── data_loader.py             # Data preprocessing and loading utilities
-├── requirements.txt           # Python dependencies
-├── launch_dashboard.sh        # Quick launch script
-├── test_dashboard.py          # Comprehensive test suite
-├── test_correlation_fix.py    # Specific correlation testing
-├── data_exploration.py        # Data exploration utilities
-├── README.md                  # This file
-├── QUICK_START_GUIDE.md       # Detailed usage guide
-├── FIX_DUPLICATE_LABELS.md    # Technical fix documentation
-└── .gitignore                 # Git ignore rules
+├── streamlit_app.py            # Main Streamlit application
+├── data_loader.py              # Data preprocessing and loading utilities
+├── requirements.txt            # Python dependencies
+├── launch_dashboard.sh         # Quick launch script
+├── test_dashboard.py           # Comprehensive test suite
+├── test_correlation_fix.py     # Specific correlation testing
+├── data_exploration.py         # Data exploration utilities
+├── README.md                   # This file
+├── QUICK_START_GUIDE.md        # Detailed usage guide
+├── FIX_DUPLICATE_LABELS.md     # Technical fix documentation
+└── .gitignore                  # Git ignore rules
 ```
 
 ## 📊 Data Overview (Sample Dataset)

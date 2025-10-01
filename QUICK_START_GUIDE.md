@@ -38,12 +38,12 @@ Your interactive PPMI Parkinson's Disease Biomarker Dashboard has been successfu
 
 ### Option 2: Manual Launch
 ```bash
-streamlit run ppmi_dashboard.py
+streamlit run streamlit_app.py
 ```
 
 ### Option 3: Background Launch
 ```bash
-nohup streamlit run ppmi_dashboard.py --server.port 8501 &
+nohup streamlit run streamlit_app.py --server.port 8501 &
 ```
 
 ## 🌐 Access the Dashboard
@@ -58,13 +58,13 @@ Your dashboard consists of these key files:
 
 ```
 PPMI Various Datasets/
-├── ppmi_dashboard.py          # Main dashboard application
-├── data_loader.py             # Data preprocessing and loading
-├── test_dashboard.py          # Comprehensive test suite
-├── launch_dashboard.sh        # Quick launch script
-├── requirements.txt           # Python dependencies
-├── README.md                  # Detailed documentation
-└── QUICK_START_GUIDE.md       # This file
+├── streamlit_app.py            # Main dashboard application
+├── data_loader.py              # Data preprocessing and loading
+├── test_dashboard.py           # Comprehensive test suite
+├── launch_dashboard.sh         # Quick launch script
+├── requirements.txt            # Python dependencies
+├── README.md                   # Detailed documentation
+└── QUICK_START_GUIDE.md        # This file
 ```
 
 ## 📈 Data Overview
