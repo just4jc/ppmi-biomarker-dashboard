@@ -89,7 +89,7 @@ PPMI Various Datasets/
 
 ### 3. Launch Dashboard
 ```bash
-streamlit run ppmi_dashboard.py
+streamlit run streamlit_app.py
 ```
 
 The dashboard will open in your default web browser at `http://localhost:8501`
