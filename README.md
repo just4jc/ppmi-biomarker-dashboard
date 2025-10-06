@@ -44,6 +44,13 @@ This dashboard focuses on key Parkinson's disease biomarkers implicated in Lewy 
 - **Risk group classification**: High vs standard genetic risk
 - **Real-time plot updates** based on selected criteria
 
+### 6. 🕸️ Graph Database Export
+- **Convert to graph format**: Transform PPMI data into nodes and relationships CSVs
+- **Neo4j compatible**: Ready-to-import format for graph databases
+- **Advanced queries**: Enable complex pattern matching and network analysis
+- **Relationship types**: Patient-Biomarker measurements, Patient-Cohort assignments, Patient-Genotype connections
+- See [GRAPH_DB_README.md](GRAPH_DB_README.md) for details
+
 ## Focus Projects from PPMI
 
 The dashboard prioritizes data from these core biomarker projects:
@@ -159,6 +166,27 @@ This dashboard analyzes data from the Parkinson's Progression Markers Initiative
 - **Aβ42**: Primary amyloid species, decreased in AD
 - **Aβ40**: Reference amyloid, ratio Aβ42/Aβ40 informative
 - **PD relevance**: Comorbid pathology, cognitive symptoms
+
+## Graph Database Export
+
+The dashboard includes functionality to export PPMI data in graph database format for advanced network analysis:
+
+```bash
+python preprocess_for_graph_db.py
+```
+
+This generates:
+- **Node CSVs**: Patients, Biomarkers, Cohorts, Genetic Variants
+- **Relationship CSVs**: Measurements, Cohort assignments, Genotype connections
+- **Documentation**: Complete schema with Neo4j import instructions
+
+**Use cases:**
+- Complex multi-hop queries (e.g., "Find patients with similar genetic profiles and divergent biomarker trajectories")
+- Network analysis of biomarker relationships
+- Patient stratification using graph algorithms
+- Integration with other graph-based datasets
+
+See [GRAPH_DB_README.md](GRAPH_DB_README.md) for detailed instructions, schema documentation, and example Cypher queries.
 
 ## Troubleshooting
 
