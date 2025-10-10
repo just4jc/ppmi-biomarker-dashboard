@@ -94,13 +94,22 @@ streamlit run streamlit_app.py
 
 The dashboard will open in your default web browser at `http://localhost:8501`
 
+### 4. Login to Dashboard
+The dashboard requires authentication to access. Use the following default credentials:
+
+**Default Login Credentials:**
+- Username: `ppmi_user`
+- Password: `biomarker2024`
+
 ## Usage Guide
 
 ### Getting Started
-1. **Load the dashboard** - Data loads automatically with caching for performance
-2. **Apply filters** - Use the sidebar to filter by demographics, genetics, etc.
-3. **Explore tabs** - Navigate through different analysis types
-4. **Interact with plots** - Hover, zoom, and select data points
+1. **Login to the dashboard** - Enter the credentials at the login page
+2. **Load the dashboard** - Data loads automatically with caching for performance
+3. **Apply filters** - Use the sidebar to filter by demographics, genetics, etc.
+4. **Explore tabs** - Navigate through different analysis types
+5. **Interact with plots** - Hover, zoom, and select data points
+6. **Logout** - Click the "🚪 Logout" button in the sidebar when done
 
 ### Analysis Workflow
 1. **Start with Biomarker Levels** - Compare groups for individual biomarkers

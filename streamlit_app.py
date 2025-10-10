@@ -27,6 +27,42 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# --- Authentication ---
+def check_authentication():
+    """Check if user is authenticated."""
+    if 'authenticated' not in st.session_state:
+        st.session_state.authenticated = False
+    return st.session_state.authenticated
+
+def login_page():
+    """Display login page and handle authentication."""
+    st.title("🔐 PPMI Biomarker Dashboard Login")
+    st.markdown("Please enter your credentials to access the dashboard.")
+    
+    # Default credentials
+    DEFAULT_USERNAME = "ppmi_user"
+    DEFAULT_PASSWORD = "biomarker2024"
+    
+    with st.form("login_form"):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        submit = st.form_submit_button("Login")
+        
+        if submit:
+            if username == DEFAULT_USERNAME and password == DEFAULT_PASSWORD:
+                st.session_state.authenticated = True
+                st.success("Login successful! Redirecting...")
+                st.rerun()
+            else:
+                st.error("Invalid username or password. Please try again.")
+    
+    st.info("**Default Credentials:**\n\n- Username: `ppmi_user`\n- Password: `biomarker2024`")
+
+def logout():
+    """Handle user logout."""
+    st.session_state.authenticated = False
+    st.rerun()
+
 # --- Data Loading ---
 @st.cache_data
 def load_data():
@@ -179,7 +215,16 @@ def show_dashboard_page():
 
 # --- Main App ---
 def main():
+    # Check authentication first
+    if not check_authentication():
+        login_page()
+        return
+    
+    # Show logout button in sidebar
     st.sidebar.title("Navigation")
+    if st.sidebar.button("🚪 Logout"):
+        logout()
+    
     page = st.sidebar.radio("Go to", ["Home", "Dashboard"])
 
     if page == "Home":

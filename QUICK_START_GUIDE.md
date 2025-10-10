@@ -52,6 +52,14 @@ Once launched, access the dashboard at:
 - **Local URL**: http://localhost:8501
 - **Network URL**: http://10.203.50.231:8501 (if running on network)
 
+### 🔐 Authentication
+
+The dashboard requires login credentials to access:
+- **Username**: `ppmi_user`
+- **Password**: `biomarker2024`
+
+These credentials are displayed on the login page for convenience.
+
 ## 📁 File Structure
 
 Your dashboard consists of these key files:
