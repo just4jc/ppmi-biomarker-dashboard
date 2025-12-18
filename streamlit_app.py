@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 from data_loader import PPMIDataLoader
 import numpy as np
+import os
 
 # --- Page Configuration ---
 st.set_page_config(
@@ -13,9 +14,12 @@ st.set_page_config(
 )
 
 # --- Authentication ---
-# Suggested credentials: Username: admin / Password: ppmi2025
-DEFAULT_USERNAME = "admin"
-DEFAULT_PASSWORD = "ppmi2025"
+# Credentials are sourced from Streamlit Secrets if available, with env vars as fallback.
+# Define in Streamlit Cloud → App → Settings → Secrets:
+#   app_user: your_username
+#   app_password: your_password
+DEFAULT_USERNAME = st.secrets.get("app_user", os.getenv("APP_USER", "admin"))
+DEFAULT_PASSWORD = st.secrets.get("app_password", os.getenv("APP_PASSWORD", "ppmi2025"))
 
 def check_password():
     """Returns `True` if the user has entered the correct password."""
@@ -38,8 +42,11 @@ def login_form():
         st.text_input("Username", key="username")
         st.text_input("Password", type="password", key="password")
         st.form_submit_button("Log in", on_click=check_password)
-    
-    st.info("💡 Default credentials: Username: `admin` / Password: `ppmi2025`")
+
+    # Only display default hint when not using Secrets or env overrides
+    if ("app_user" not in st.secrets and "app_password" not in st.secrets
+        and os.getenv("APP_USER") is None and os.getenv("APP_PASSWORD") is None):
+        st.info("💡 Default credentials: Username: `admin` / Password: `ppmi2025`")
 
 # --- Custom CSS ---
 st.markdown("""
