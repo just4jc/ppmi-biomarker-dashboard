@@ -70,16 +70,16 @@ def load_data():
     loader = PPMIDataLoader()
     merged_data = loader.create_merged_dataset()
     if merged_data is None or merged_data.empty:
-        return pd.DataFrame(), pd.DataFrame(), []
+        return pd.DataFrame(), pd.DataFrame(), [], []
     merged_data = loader.calculate_pd_pros(merged_data)
     biomarker_summary = loader.get_biomarker_summary()
-    all_biomarkers = merged_data['TESTNAME'].dropna().unique()
+    all_biomarkers = sorted(merged_data['TESTNAME'].dropna().unique())
     key_biomarkers = sorted([
         'CSF Alpha-synuclein', 'ABeta 1-42', 'pTau', 'tTau', 
         'ABeta42', 'ABeta40', 'pTau181', 'NEFL', 'GFAP', 'UCHL1'
     ])
     available_key_biomarkers = [b for b in key_biomarkers if b in all_biomarkers]
-    return merged_data, biomarker_summary, available_key_biomarkers
+    return merged_data, biomarker_summary, available_key_biomarkers, all_biomarkers
 
 # --- Plotting Functions ---
 def create_violin_plot(data, biomarker, cohorts):
@@ -127,7 +127,7 @@ def show_home_page():
 
 def show_dashboard_page():
     st.title("🧠 PPMI Advanced Biomarker Dashboard")
-    data, summary, key_biomarkers = load_data()
+    data, summary, key_biomarkers, all_biomarkers = load_data()
 
     if data.empty:
         st.error("Failed to load data. Please check the data files and `data_loader.py`.")
@@ -153,12 +153,16 @@ def show_dashboard_page():
         (data['RISK_GROUP'].isin(selected_risk if selected_risk else data['RISK_GROUP'].unique()))
     ]
 
+    # Biomarker list scope
+    biomarker_list_scope = st.sidebar.radio("Biomarker list", ["Key", "All"], horizontal=True)
+    biomarker_options = key_biomarkers if biomarker_list_scope == "Key" else all_biomarkers
+
     tab_titles = ["Biomarker Distribution", "Longitudinal Analysis", "Correlation Analysis", "PD Proteomic Score (PD-ProS)", "Data Explorer"]
     tab1, tab2, tab3, tab4, tab5 = st.tabs(tab_titles)
 
     with tab1:
         st.header("Biomarker Distribution by Cohort")
-        biomarker_to_plot = st.selectbox("Select a Biomarker", key_biomarkers)
+        biomarker_to_plot = st.selectbox("Select a Biomarker", biomarker_options)
         if biomarker_to_plot:
             fig = create_violin_plot(filtered_data, biomarker_to_plot, selected_cohorts)
             if fig:
@@ -168,7 +172,7 @@ def show_dashboard_page():
 
     with tab2:
         st.header("Longitudinal Biomarker Trends")
-        long_biomarker = st.selectbox("Select a Biomarker for Longitudinal View", key_biomarkers)
+        long_biomarker = st.selectbox("Select a Biomarker for Longitudinal View", biomarker_options)
         if long_biomarker:
             fig = create_longitudinal_plot(filtered_data, long_biomarker)
             if fig:
@@ -179,8 +183,11 @@ def show_dashboard_page():
     with tab3:
         st.header("Biomarker vs. Biomarker Correlation")
         col1, col2 = st.columns(2)
-        x_biomarker = col1.selectbox("X-axis Biomarker", key_biomarkers, index=0)
-        y_biomarker = col2.selectbox("Y-axis Biomarker", key_biomarkers, index=1)
+        # Ensure there are enough options for defaults
+        default_x = 0 if len(biomarker_options) > 0 else None
+        default_y = 1 if len(biomarker_options) > 1 else None
+        x_biomarker = col1.selectbox("X-axis Biomarker", biomarker_options, index=default_x if default_x is not None else 0)
+        y_biomarker = col2.selectbox("Y-axis Biomarker", biomarker_options, index=default_y if default_y is not None else 0)
         
         if x_biomarker and y_biomarker:
             if x_biomarker == y_biomarker:
