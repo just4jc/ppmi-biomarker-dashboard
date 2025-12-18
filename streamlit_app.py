@@ -12,6 +12,35 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# --- Authentication ---
+# Suggested credentials: Username: admin / Password: ppmi2025
+DEFAULT_USERNAME = "admin"
+DEFAULT_PASSWORD = "ppmi2025"
+
+def check_password():
+    """Returns `True` if the user has entered the correct password."""
+    # IMPORTANT: This is not secure for production!
+    # For production, use Streamlit Secrets Management
+    if (st.session_state.get("username") == DEFAULT_USERNAME and 
+        st.session_state.get("password") == DEFAULT_PASSWORD):
+        st.session_state["authenticated"] = True
+    else:
+        st.session_state["authenticated"] = False
+        if "password" in st.session_state and st.session_state["password"]:
+            st.error("😕 User not known or password incorrect")
+
+def login_form():
+    """Displays the login form."""
+    st.title("🧠 PPMI Biomarker Dashboard Login")
+    st.markdown("Please log in to access the dashboard.")
+    
+    with st.form("login"):
+        st.text_input("Username", key="username")
+        st.text_input("Password", type="password", key="password")
+        st.form_submit_button("Log in", on_click=check_password)
+    
+    st.info("💡 Default credentials: Username: `admin` / Password: `ppmi2025`")
+
 # --- Custom CSS ---
 st.markdown("""
 <style>
@@ -46,13 +75,14 @@ def load_data():
     return merged_data, biomarker_summary, available_key_biomarkers
 
 # --- Plotting Functions ---
-def create_boxplot(data, biomarker, cohorts):
+def create_violin_plot(data, biomarker, cohorts):
     plot_data = data[data['TESTNAME'] == biomarker].dropna(subset=['TESTVALUE_NUMERIC', 'COHORT_SIMPLE'])
     if plot_data.empty: return None
-    return px.box(plot_data, x='COHORT_SIMPLE', y='TESTVALUE_NUMERIC', color='COHORT_SIMPLE',
-                  title=f'Distribution of {biomarker} by Diagnosis',
-                  labels={'COHORT_SIMPLE': 'Cohort', 'TESTVALUE_NUMERIC': 'Biomarker Level'},
-                  category_orders={'COHORT_SIMPLE': cohorts})
+    return px.violin(plot_data, x='COHORT_SIMPLE', y='TESTVALUE_NUMERIC', color='COHORT_SIMPLE',
+                   box=True, points=False, # Show box plot inside violin
+                   title=f'Distribution of {biomarker} by Diagnosis',
+                   labels={'COHORT_SIMPLE': 'Cohort', 'TESTVALUE_NUMERIC': 'Biomarker Level'},
+                   category_orders={'COHORT_SIMPLE': cohorts})
 
 def create_longitudinal_plot(data, biomarker):
     plot_data = data[data['TESTNAME'] == biomarker].dropna(subset=['AGE_AT_BIOMARKER', 'TESTVALUE_NUMERIC'])
@@ -123,7 +153,7 @@ def show_dashboard_page():
         st.header("Biomarker Distribution by Cohort")
         biomarker_to_plot = st.selectbox("Select a Biomarker", key_biomarkers)
         if biomarker_to_plot:
-            fig = create_boxplot(filtered_data, biomarker_to_plot, selected_cohorts)
+            fig = create_violin_plot(filtered_data, biomarker_to_plot, selected_cohorts)
             if fig:
                 st.plotly_chart(fig, use_container_width=True)
             else:
@@ -169,8 +199,8 @@ def show_dashboard_page():
         if 'PD_PROS' not in filtered_data.columns or filtered_data['PD_PROS'].isna().all():
             st.warning("PD-ProS score could not be calculated. Ensure the required proteins are in the dataset.")
         else:
-            fig_pros_box = px.box(filtered_data.dropna(subset=['PD_PROS']), x='COHORT_SIMPLE', y='PD_PROS', color='COHORT_SIMPLE', title='Distribution of PD-ProS by Cohort')
-            st.plotly_chart(fig_pros_box, use_container_width=True)
+            fig_pros_violin = px.violin(filtered_data.dropna(subset=['PD_PROS']), x='COHORT_SIMPLE', y='PD_PROS', color='COHORT_SIMPLE', box=True, title='Distribution of PD-ProS by Cohort')
+            st.plotly_chart(fig_pros_violin, use_container_width=True)
 
     with tab5:
         st.header("Data Explorer")
@@ -178,6 +208,17 @@ def show_dashboard_page():
 
 # --- Main App ---
 def main():
+    # Check authentication first
+    if not st.session_state.get("authenticated", False):
+        login_form()
+        return
+    
+    # Add logout button in sidebar
+    if st.sidebar.button("🚪 Logout"):
+        st.session_state["authenticated"] = False
+        st.rerun()
+    
+    st.sidebar.markdown("---")
     st.sidebar.title("Navigation")
     page = st.sidebar.radio("Go to", ["Home", "Dashboard"])
 
