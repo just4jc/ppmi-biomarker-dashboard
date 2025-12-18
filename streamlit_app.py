@@ -12,6 +12,35 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# --- Authentication ---
+# Suggested credentials: Username: admin / Password: ppmi2025
+DEFAULT_USERNAME = "admin"
+DEFAULT_PASSWORD = "ppmi2025"
+
+def check_password():
+    """Returns `True` if the user has entered the correct password."""
+    # IMPORTANT: This is not secure for production!
+    # For production, use Streamlit Secrets Management
+    if (st.session_state.get("username") == DEFAULT_USERNAME and 
+        st.session_state.get("password") == DEFAULT_PASSWORD):
+        st.session_state["authenticated"] = True
+    else:
+        st.session_state["authenticated"] = False
+        if "password" in st.session_state and st.session_state["password"]:
+            st.error("😕 User not known or password incorrect")
+
+def login_form():
+    """Displays the login form."""
+    st.title("🧠 PPMI Biomarker Dashboard Login")
+    st.markdown("Please log in to access the dashboard.")
+    
+    with st.form("login"):
+        st.text_input("Username", key="username")
+        st.text_input("Password", type="password", key="password")
+        st.form_submit_button("Log in", on_click=check_password)
+    
+    st.info("💡 Default credentials: Username: `admin` / Password: `ppmi2025`")
+
 # --- Custom CSS ---
 st.markdown("""
 <style>
@@ -179,6 +208,17 @@ def show_dashboard_page():
 
 # --- Main App ---
 def main():
+    # Check authentication first
+    if not st.session_state.get("authenticated", False):
+        login_form()
+        return
+    
+    # Add logout button in sidebar
+    if st.sidebar.button("🚪 Logout"):
+        st.session_state["authenticated"] = False
+        st.rerun()
+    
+    st.sidebar.markdown("---")
     st.sidebar.title("Navigation")
     page = st.sidebar.radio("Go to", ["Home", "Dashboard"])
 
