@@ -99,31 +99,140 @@ def create_longitudinal_plot(data, biomarker):
                       labels={'AGE_AT_BIOMARKER': 'Age at Visit', 'TESTVALUE_NUMERIC': 'Biomarker Level'})
 
 def create_correlation_plot(data, x_var, y_var):
-    if x_var not in data.columns or y_var not in data.columns: return None
+    # Early return if variables are the same to prevent duplicate column error
+    if x_var == y_var:
+        return None
+    
+    if x_var not in data.columns or y_var not in data.columns: 
+        return None
+    
     plot_data = data.dropna(subset=[x_var, y_var])
-    if plot_data.empty: return None
+    if plot_data.empty: 
+        return None
+    
+    # Additional safety check for duplicate column names
+    if data.columns.duplicated().any():
+        print(f"Warning: DataFrame has duplicate columns: {data.columns.tolist()}")
+        return None
+    
     return px.scatter(plot_data, x=x_var, y=y_var, color='COHORT_SIMPLE', trendline='ols',
                       title=f'Correlation between {x_var} and {y_var}',
                       labels={x_var: x_var, y_var: y_var})
 
 # --- UI Sections ---
 def show_home_page():
-    st.title("Welcome to the PPMI Biomarker Dashboard!")
+    st.title("🧠 Welcome to the PPMI Biomarker Dashboard!")
+    
     st.markdown("""
-    This interactive dashboard provides a comprehensive platform for exploring the Parkinson's Progression Markers Initiative (PPMI) dataset. It is designed to help researchers, clinicians, and data scientists visualize and analyze the complex relationships between biomarkers, clinical assessments, and patient demographics in Parkinson's disease.
-
-    ### How to Use This Dashboard
-    Select the **Dashboard** from the sidebar to begin exploring the data. You will find several tabs, each offering a unique perspective:
-
-    - **Biomarker Distribution**: Compare biomarker levels across different diagnostic groups (Parkinson's, Healthy Control, etc.).
-    - **Longitudinal Analysis**: Track how biomarkers change over time for individuals or cohorts.
-    - **Correlation Analysis**: Explore the relationships between different biomarkers or between biomarkers and clinical scores.
-    - **PD Proteomic Score (PD-ProS)**: Investigate a promising 14-protein panel for tracking disease progression.
-    - **Data Explorer**: View the raw data table with the applied filters.
-
-    ### About the Data
-    The data is a curated subset of the PPMI database, a landmark study to identify biomarkers of Parkinson's disease progression.
+    This interactive dashboard provides a comprehensive platform for exploring the **Parkinson's Progression Markers Initiative (PPMI)** dataset. 
+    It is designed to help researchers, clinicians, and data scientists visualize and analyze the complex relationships between 
+    biomarkers, clinical assessments, and patient demographics in Parkinson's disease.
     """)
+    
+    st.markdown("---")
+    
+    st.header("📊 Dashboard Features")
+    st.markdown("""
+    Select the **Dashboard** from the sidebar to begin exploring the data. You will find several tabs, each offering a unique analytical perspective:
+    """)
+    
+    # Create expandable sections for each tab
+    with st.expander("🔍 **Biomarker Distribution** - Compare diagnostic groups"):
+        st.markdown("""
+        **Purpose**: Compare biomarker levels across different diagnostic groups (Parkinson's Disease, Healthy Controls, etc.).
+        
+        **What you can do**:
+        - Select any biomarker from the dropdown menu
+        - View box plots showing the distribution of biomarker levels by cohort
+        - Identify potential diagnostic differences between groups
+        - Apply global filters to focus on specific age ranges or genetic risk groups
+        
+        **Key biomarkers available**: CSF Alpha-synuclein, Amyloid Beta (ABeta 1-42), phosphorylated Tau (pTau), total Tau (tTau), and more.
+        """)
+    
+    with st.expander("📈 **Longitudinal Analysis** - Track changes over time"):
+        st.markdown("""
+        **Purpose**: Track how biomarkers change over time for individuals or cohorts (longitudinal donor analysis).
+        
+        **What you can do**:
+        - Select a biomarker to analyze its temporal trends
+        - View scatter plots with trend lines showing biomarker changes with age
+        - Compare trajectories between different diagnostic groups
+        - Identify potential biomarkers that show disease progression patterns
+        
+        **Insights**: This analysis helps identify biomarkers that may be useful for tracking disease progression over time.
+        """)
+    
+    with st.expander("🔗 **Correlation Analysis** - Explore biomarker relationships"):
+        st.markdown("""
+        **Purpose**: Explore relationships between different biomarkers or between biomarkers and clinical scores.
+        
+        **What you can do**:
+        - Select two different biomarkers for X and Y axes
+        - View scatter plots with correlation trend lines
+        - Examine how biomarkers relate to each other across different cohorts
+        - Identify potential biomarker networks or pathways
+        
+        **Note**: Choose different biomarkers for meaningful correlation analysis. The dashboard will warn you if you select the same biomarker for both axes.
+        """)
+    
+    with st.expander("🧬 **PD Proteomic Score (PD-ProS)** - Disease progression tracker"):
+        st.markdown("""
+        **Purpose**: Investigate the PD Proteomic Score, a promising 14-protein panel for tracking disease progression.
+        
+        **What you can do**:
+        - View the distribution of PD-ProS scores across different cohorts
+        - Compare how this composite score differs between Parkinson's patients and healthy controls
+        - Understand how multiple biomarkers can be combined into a single prognostic score
+        
+        **Scientific Background**: The PD-ProS score combines 14 specific proteins into a single metric that may be more powerful than individual biomarkers for tracking disease progression.
+        """)
+    
+    with st.expander("📋 **Data Explorer** - Raw data access"):
+        st.markdown("""
+        **Purpose**: View and explore the raw data table with applied filters.
+        
+        **What you can do**:
+        - Browse the underlying dataset (first 1000 rows)
+        - See all available columns and data points
+        - Understand the data structure and patient demographics
+        - Verify specific data points or explore data quality
+        
+        **Tip**: Use the global filters in the sidebar to narrow down the data before exploring.
+        """)
+    
+    st.markdown("---")
+    
+    st.header("🧭 Global Filters")
+    st.markdown("""
+    The sidebar contains **Global Filters** that apply to all tabs:
+    
+    - **Filter by Cohort**: Select specific diagnostic groups (PD, Healthy Controls, etc.)
+    - **Filter by Age**: Narrow analysis to specific age ranges
+    - **Filter by Genetic Risk**: Focus on patients with specific genetic risk profiles
+    
+    These filters help you focus your analysis on specific patient populations of interest.
+    """)
+    
+    st.markdown("---")
+    
+    st.header("📚 About the PPMI Data")
+    st.markdown("""
+    The **Parkinson's Progression Markers Initiative (PPMI)** is a landmark longitudinal study designed to identify biomarkers 
+    of Parkinson's disease progression. This dataset represents a curated subset of the PPMI database, containing:
+    
+    - **Biomarker measurements**: CSF proteins, blood-based markers
+    - **Clinical assessments**: UPDRS scores, cognitive evaluations  
+    - **Patient demographics**: Age, sex, genetic information
+    - **Longitudinal data**: Multiple visits per patient over time
+    
+    The goal is to identify reliable biomarkers that can track disease progression, predict outcomes, and potentially serve as endpoints for clinical trials.
+    """)
+    
+    st.markdown("---")
+    
+    st.info("💡 **Getting Started**: Click on 'Dashboard' in the sidebar to begin your analysis!")
+    
 
 def show_dashboard_page():
     st.title("🧠 PPMI Advanced Biomarker Dashboard")
@@ -178,28 +287,36 @@ def show_dashboard_page():
 
     with tab3:
         st.header("Biomarker vs. Biomarker Correlation")
-        col1, col2 = st.columns(2)
-        x_biomarker = col1.selectbox("X-axis Biomarker", key_biomarkers, index=0)
-        y_biomarker = col2.selectbox("Y-axis Biomarker", key_biomarkers, index=1)
         
-        if x_biomarker and y_biomarker:
-            if x_biomarker == y_biomarker:
-                st.warning("Please select different biomarkers for the X and Y axes.")
-            else:
-                pivot_x = filtered_data[filtered_data['TESTNAME'] == x_biomarker].groupby('PATNO')['TESTVALUE_NUMERIC'].mean().rename(x_biomarker)
-                pivot_y = filtered_data[filtered_data['TESTNAME'] == y_biomarker].groupby('PATNO')['TESTVALUE_NUMERIC'].mean().rename(y_biomarker)
-                corr_data = pd.concat([pivot_x, pivot_y], axis=1).dropna()
-                
-                if not corr_data.empty:
-                    cohort_info = filtered_data[['PATNO', 'COHORT_SIMPLE']].drop_duplicates('PATNO').set_index('PATNO')
-                    corr_data = corr_data.join(cohort_info)
-                    fig = create_correlation_plot(corr_data, x_biomarker, y_biomarker)
-                    if fig:
-                        st.plotly_chart(fig, use_container_width=True)
+        if len(key_biomarkers) < 2:
+            st.warning("At least 2 biomarkers are required for correlation analysis.")
+            st.info("Please ensure the dataset contains multiple biomarkers.")
+        else:
+            col1, col2 = st.columns(2)
+            # Ensure different defaults, but handle edge cases
+            default_y_index = 1 if len(key_biomarkers) > 1 else 0
+            x_biomarker = col1.selectbox("X-axis Biomarker", key_biomarkers, index=0)
+            y_biomarker = col2.selectbox("Y-axis Biomarker", key_biomarkers, index=default_y_index)
+            
+            if x_biomarker and y_biomarker:
+                if x_biomarker == y_biomarker:
+                    st.warning("Please select different biomarkers for the X and Y axes.")
+                    st.info("💡 **Tip**: Choose different biomarkers to explore correlations between different measurements.")
+                else:
+                    pivot_x = filtered_data[filtered_data['TESTNAME'] == x_biomarker].groupby('PATNO')['TESTVALUE_NUMERIC'].mean().rename(x_biomarker)
+                    pivot_y = filtered_data[filtered_data['TESTNAME'] == y_biomarker].groupby('PATNO')['TESTVALUE_NUMERIC'].mean().rename(y_biomarker)
+                    corr_data = pd.concat([pivot_x, pivot_y], axis=1).dropna()
+                    
+                    if not corr_data.empty:
+                        cohort_info = filtered_data[['PATNO', 'COHORT_SIMPLE']].drop_duplicates('PATNO').set_index('PATNO')
+                        corr_data = corr_data.join(cohort_info)
+                        fig = create_correlation_plot(corr_data, x_biomarker, y_biomarker)
+                        if fig:
+                            st.plotly_chart(fig, use_container_width=True)
+                        else:
+                            st.warning("Not enough data to plot correlation.")
                     else:
                         st.warning("Not enough data to plot correlation.")
-                else:
-                    st.warning("Not enough data to plot correlation.")
 
     with tab4:
         st.header("PD Proteomic Score (PD-ProS) Analysis")
