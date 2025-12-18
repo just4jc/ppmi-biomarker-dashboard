@@ -94,6 +94,25 @@ streamlit run streamlit_app.py
 
 The dashboard will open in your default web browser at `http://localhost:8501`
 
+### 🔐 Configure Authentication (recommended)
+
+This app supports simple authentication. In Streamlit Cloud, set the following secrets (App → Settings → Secrets):
+
+```
+app_user: admin
+app_password: ppmi2025
+```
+
+For local development, you can alternatively use environment variables:
+
+```bash
+export APP_USER=admin
+export APP_PASSWORD=ppmi2025
+streamlit run streamlit_app.py
+```
+
+If no secrets or env vars are provided, the app falls back to the default credentials shown above and displays a hint on the login screen.
+
 ## Usage Guide
 
 ### Getting Started
