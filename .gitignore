@@ -16,6 +16,9 @@ venv/
 *.pdf
 *.gz
 
+# Generated graph database files
+graph_data/
+
 # IDE / Editor
 .vscode/
 .idea/
