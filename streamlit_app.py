@@ -162,9 +162,15 @@ def show_dashboard_page():
         (data['PROJECTID'].isin(selected_projects if selected_projects else data['PROJECTID'].unique()))
     ]
 
-    # Biomarker list scope
-    biomarker_list_scope = st.sidebar.radio("Biomarker list", ["Key", "All"], horizontal=True)
-    biomarker_options = key_biomarkers if biomarker_list_scope == "Key" else all_biomarkers
+    # Biomarker list scope (default to All when focusing on Project 177)
+    scope_default_index = 1 if 177 in selected_projects else 0
+    available_filtered = sorted(filtered_data['TESTNAME'].dropna().unique())
+    key_filtered = [b for b in key_biomarkers if b in available_filtered]
+    biomarker_list_scope = st.sidebar.radio("Biomarker list", ["Key", "All"], index=scope_default_index, horizontal=True)
+    if biomarker_list_scope == "Key":
+        biomarker_options = key_filtered if key_filtered else available_filtered
+    else:
+        biomarker_options = available_filtered if available_filtered else all_biomarkers
 
     tab_titles = ["Biomarker Distribution", "Longitudinal Analysis", "Correlation Analysis", "PD Proteomic Score (PD-ProS)", "Data Explorer"]
     tab1, tab2, tab3, tab4, tab5 = st.tabs(tab_titles)
