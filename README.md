@@ -117,9 +117,14 @@ If no secrets or env vars are provided, the app falls back to the default creden
 
 ### Getting Started
 1. **Load the dashboard** - Data loads automatically with caching for performance
-2. **Apply filters** - Use the sidebar to filter by demographics, genetics, etc.
+2. **Apply filters** - Use the sidebar to filter by cohort, age, genetics, and project (defaults to Project 177)
 3. **Explore tabs** - Navigate through different analysis types
 4. **Interact with plots** - Hover, zoom, and select data points
+
+### Sidebar Controls
+- **Project filter**: Defaults to Project 177; select additional projects as needed
+- **Biomarker list**: Toggle between *Key* biomarkers and *All*; when Project 177 is active, the list defaults to *All*
+- **Cohort, age, genetic risk**: Apply global filters that propagate to all tabs
 
 ### Analysis Workflow
 1. **Start with Biomarker Levels** - Compare groups for individual biomarkers
