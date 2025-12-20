@@ -147,7 +147,12 @@ def show_dashboard_page():
         selected_risk = []
 
     project_options = sorted(data['PROJECTID'].dropna().unique())
-    selected_projects = st.sidebar.multiselect("Filter by Project ID", project_options, default=list(project_options))
+    default_projects = [177] if 177 in project_options else project_options
+    selected_projects = st.sidebar.multiselect(
+        "Filter by Project ID",
+        project_options,
+        default=default_projects
+    )
 
     # Apply filters
     filtered_data = data[
