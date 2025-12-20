@@ -146,11 +146,15 @@ def show_dashboard_page():
     else:
         selected_risk = []
 
+    project_options = sorted(data['PROJECTID'].dropna().unique())
+    selected_projects = st.sidebar.multiselect("Filter by Project ID", project_options, default=list(project_options))
+
     # Apply filters
     filtered_data = data[
         (data['COHORT_SIMPLE'].isin(selected_cohorts)) & 
         (data['AGE_AT_BIOMARKER'].between(age_range[0], age_range[1])) &
-        (data['RISK_GROUP'].isin(selected_risk if selected_risk else data['RISK_GROUP'].unique()))
+        (data['RISK_GROUP'].isin(selected_risk if selected_risk else data['RISK_GROUP'].unique())) &
+        (data['PROJECTID'].isin(selected_projects if selected_projects else data['PROJECTID'].unique()))
     ]
 
     # Biomarker list scope
