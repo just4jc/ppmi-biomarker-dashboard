@@ -265,5 +265,5 @@ For questions specific to this PPMI Dashboard repository, please refer to the ma
 
 ---
 
-**Last Updated**: December 2025  
+**Last Updated**: December 2024  
 **Repository**: just4jc/ppmi-biomarker-dashboard
