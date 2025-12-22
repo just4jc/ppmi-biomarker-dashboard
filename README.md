@@ -60,6 +60,21 @@ The dashboard prioritizes data from these core biomarker projects:
 ### Prerequisites
 - Python 3.8 or higher
 - Access to PPMI dataset files
+- Git (for cloning the repository)
+- GitHub account (for contributing or accessing private features)
+
+### 0. Clone the Repository
+
+```bash
+git clone https://github.com/just4jc/ppmi-biomarker-dashboard.git
+cd ppmi-biomarker-dashboard
+```
+
+**Need help with GitHub authentication?** See our [GitHub Personal Access Token Guide](GITHUB_ACCESS_TOKEN.md) for detailed instructions on:
+- Creating and locating your Personal Access Token
+- Using tokens for Git operations
+- Setting up credential storage
+- Security best practices
 
 ### 1. Install Dependencies
 ```bash
@@ -191,6 +206,12 @@ This dashboard analyzes data from the Parkinson's Progression Markers Initiative
 2. **File not found**: Check data file paths in `data_loader.py`
 3. **Memory issues**: Consider filtering data more restrictively
 4. **Slow loading**: First run takes longer due to data processing
+5. **Git authentication failed**: See [GitHub Personal Access Token Guide](GITHUB_ACCESS_TOKEN.md) for setting up authentication
+
+### GitHub Access Issues
+- **Can't clone repository**: Make sure you have Git installed and the repository URL is correct
+- **Authentication errors when pushing**: You may need a Personal Access Token instead of your password - see [GITHUB_ACCESS_TOKEN.md](GITHUB_ACCESS_TOKEN.md)
+- **403 Forbidden errors**: Check your token permissions and expiration date
 
 ### Performance Tips
 - **Filter early**: Apply demographic/genetic filters to reduce data size
@@ -200,10 +221,18 @@ This dashboard analyzes data from the Parkinson's Progression Markers Initiative
 ## Contributing
 
 To enhance the dashboard:
-1. **Add new biomarkers**: Update `key_biomarker_names` in dashboard
-2. **New visualizations**: Create functions following existing patterns
-3. **Statistical methods**: Add to correlation/testing functions
-4. **UI improvements**: Enhance Streamlit interface
+1. **Fork the repository** on GitHub
+2. **Clone your fork** locally (see [GitHub Access Token Guide](GITHUB_ACCESS_TOKEN.md) if you need help with authentication)
+3. **Create a feature branch** for your changes
+4. **Add new features**:
+   - Add new biomarkers: Update `key_biomarker_names` in dashboard
+   - New visualizations: Create functions following existing patterns
+   - Statistical methods: Add to correlation/testing functions
+   - UI improvements: Enhance Streamlit interface
+5. **Test your changes** thoroughly
+6. **Submit a Pull Request** with a clear description of your changes
+
+For detailed information on setting up Git authentication, see [GITHUB_ACCESS_TOKEN.md](GITHUB_ACCESS_TOKEN.md).
 
 ## License & Ethical Use
 
