@@ -31,6 +31,18 @@ Your interactive PPMI Parkinson's Disease Biomarker Dashboard has been successfu
 
 ## 🚀 How to Launch
 
+### First Time Setup
+```bash
+# Clone the repository
+git clone https://github.com/just4jc/ppmi-biomarker-dashboard.git
+cd ppmi-biomarker-dashboard
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+**Need help with Git/GitHub authentication?** See [GITHUB_ACCESS_TOKEN.md](GITHUB_ACCESS_TOKEN.md) for detailed instructions on setting up your GitHub Personal Access Token.
+
 ### Option 1: Quick Launch Script
 ```bash
 ./launch_dashboard.sh
@@ -64,6 +76,7 @@ PPMI Various Datasets/
 ├── launch_dashboard.sh         # Quick launch script
 ├── requirements.txt            # Python dependencies
 ├── README.md                   # Detailed documentation
+├── GITHUB_ACCESS_TOKEN.md      # GitHub authentication guide
 └── QUICK_START_GUIDE.md        # This file
 ```
 

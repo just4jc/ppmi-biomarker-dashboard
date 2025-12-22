@@ -39,12 +39,17 @@ An interactive Streamlit dashboard for exploring biomarker relationships in Park
 ### Prerequisites
 - Python 3.8+
 - Access to PPMI dataset (not included - requires PPMI Data Use Agreement)
+- Git (for cloning the repository)
+- GitHub account (optional, for contributing)
 
 ### Installation
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/just4jc/ppmi-biomarker-dashboard.git
 cd ppmi-biomarker-dashboard
+
+# Need help with GitHub authentication?
+# See GITHUB_ACCESS_TOKEN.md for detailed instructions
 
 # Install dependencies
 pip install -r requirements.txt
@@ -72,8 +77,10 @@ ppmi-biomarker-dashboard/
 ├── test_dashboard.py           # Comprehensive test suite
 ├── test_correlation_fix.py     # Specific correlation testing
 ├── data_exploration.py         # Data exploration utilities
-├── README.md                   # This file
+├── README.md                   # Main documentation
+├── PROJECT_README.md           # This file
 ├── QUICK_START_GUIDE.md        # Detailed usage guide
+├── GITHUB_ACCESS_TOKEN.md      # GitHub authentication guide
 ├── FIX_DUPLICATE_LABELS.md     # Technical fix documentation
 └── .gitignore                  # Git ignore rules
 ```
