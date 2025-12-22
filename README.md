@@ -2,6 +2,8 @@
 
 An interactive Streamlit dashboard for exploring biomarker relationships in Parkinson's Disease progression using data from the Parkinson's Progression Markers Initiative (PPMI).
 
+> 🔑 **New to GitHub?** Need help with authentication? Check out our [GitHub Personal Access Token Guide](GITHUB_ACCESS_TOKEN.md) for step-by-step instructions on setting up Git access.
+
 ## Overview
 
 This dashboard focuses on key Parkinson's disease biomarkers implicated in Lewy body pathology:
